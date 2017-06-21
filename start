@@ -1,0 +1,31 @@
+#!/bin/bash
+echo -e 'Starting Node.js + Express boilerplate'
+
+# initialize git repository
+git init
+
+# create common files
+touch index.js
+
+# init package.json with default values 
+npm init -y
+
+# add scripts
+npm i json
+
+./node_modules/.bin/json -I -f package.json -e 'this.scripts.start="if [[ ${NODE_ENV} == \"production\" ]]; then npm run start:prod; else npm run start:dev; fi"'
+./node_modules/.bin/json -I -f package.json -e 'this.scripts["start:dev"]="nodemon $npm_package_main --exec babel-node"'
+./node_modules/.bin/json -I -f package.json -e 'this.scripts["start:prod"]="nodemon $npm_package_main"'
+./node_modules/.bin/json -I -f package.json -e 'this.scripts.clean="rimraf dist"'
+./node_modules/.bin/json -I -f package.json -e 'this.scripts.build="babel index.js -d dist/build && babel src -d dist/build/src && cp -r package.json dist/build"'
+
+npm uni json
+
+# install development dependencies
+npm i -D babel-cli babel-eslint babel-plugin-transform-class-properties babel-plugin-transform-es2015-modules-commonjs babel-plugin-transform-flow-strip-types babel-plugin-transform-object-rest-spread babel-preset-env babel-preset-flow eslint eslint-config-airbnb-base eslint-plugin-flowtype eslint-plugin-import eslint-plugin-security flow-bin flow-remove-types linter-flow errorhandler
+
+# install production dependencies
+npm i babel-plugin-transform-runtime nodemon prequest-lite express morgan body-parser method-override
+
+echo -e '\nDone. \xF0\x9F\x9A\x80'
+rm -- "$0"
